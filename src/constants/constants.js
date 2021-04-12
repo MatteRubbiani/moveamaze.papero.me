@@ -1,5 +1,3 @@
-import Phaser from "phaser";
-
 const strings = {
     title: "Cosmos",
     homeView: {
@@ -30,20 +28,6 @@ const strings = {
 
 const colors = ["green", "red", "violet", "blue"];
 
-const config = (scene, parent, width, height) => {
-    return {
-        type: Phaser.AUTO,
-        physics: {
-            default: 'arcade'
-        },
-        canvasStyle: "border: 2px solid white",
-        transparent: true,
-        parent,
-        width,
-        height,
-        scene
-    }
-}
 
 let baseUrl = "https://papero.me";
 const urls = {
@@ -65,4 +49,4 @@ const gameDimensions = {
     height: 600
 }
 
-export { strings, colors, config, urls, sceneKeys, gameDimensions }
+export { strings, colors, urls, sceneKeys, gameDimensions }

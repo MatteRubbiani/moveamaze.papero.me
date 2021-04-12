@@ -3,10 +3,9 @@
     <UserHamburgerMenu :show="showHamburgerMenu"
                        :src="require('@/assets/hamburger_icon_dark.png')"
                        @toggle-show="showHamburgerMenu=$event"/>
+    <Header></Header>
+
     <div class="home">
-      <img src="../assets/title.png">
-
-
       <div class="buttons-container" v-if="choice===null">
         <button @click="choice='join'">{{strings.homeView.joinGameButton}}</button>
         <button @click="choice='create'">{{strings.homeView.createGameButton}}</button>
@@ -33,22 +32,22 @@
       </div>
     </div>
 
-
   </div>
 </template>
 
 <script>
-import {strings, urls} from "../constants/constants";
+
+import {strings} from "../constants/constants";
 import UserHamburgerMenu from "../components/UserHamburgerMenu";
-import axios from "axios";
-import store from "../store";
+import Header from "@/components/Header";
 
 
 export default {
   name: 'Game',
-  components: {UserHamburgerMenu},
+  components: {Header, UserHamburgerMenu},
   data() {
     return {
+
       strings: strings,
       showHamburgerMenu: false,
       showPopup: false,
@@ -58,85 +57,38 @@ export default {
       confirmButton: ""
     }
   },
-  methods: {
-    play(){
-      axios
-          .get(urls.getGameStatusUrl, {params: {gameId: this.input.toLowerCase()}})
-          .then(response => {
-            if(response.data){
-              if(this.choice==="join"){
-                this.$router.push({name: "Game", params: {gameId: this.input}});
-              } else if (this.choice==="create"){
-                this.popupMessage = strings.homeView.gameAlreadyExists;
-                this.confirmButton = strings.homeView.joinGameButton;
-                this.showPopup = true;
-              }
-            } else {
-              if(this.choice==="join"){
-                this.popupMessage = strings.homeView.gameDoesNotExists;
-                this.confirmButton = strings.homeView.createGameButton;
-                this.showPopup = true;
-              } else if(this.choice==="create"){
-                this.$router.push({name: "Game", params: {gameId: this.input}});
-              }
-            }
-          });
-    },
-    confirm(){
-      this.$router.push({name: "Game", params: {gameId: this.input}})
-    }
-  },
-  beforeRouteEnter(to, from, next){
-    if (store.state.logged === -1 || store.state.username === "") {
-      axios.get(urls.getLoginInfoUrl)
-          .then(response => {
-            if (response.data) {
-              store.dispatch("setLogged", response.data.google_signed_in);
-              store.dispatch("setUsername", response.data.username);
-              next();
-            } else {
-              store.dispatch("setLogged", false);
-              store.dispatch("setUsername", null);
-              next();
-            }
-          })
-          .catch(() => {
-            location.href = location.origin + "/error?from=" + location.pathname;
-          });
-    } else next();
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-
+@import "../styles/global";
 .wrapper{
   width: 100%;
   height: 100%;
+  max-width: 1200px;
+  margin: auto;
 
   .home {
+    width: 100%;
     display: flex;
     flex-flow: column;
     justify-content: space-between;
     height: 100%;
     align-items: center;
 
-    img{
-      margin-top: 10px;
-      width: 50%;
-    }
-
-
-
-
     .buttons-container{
       display: flex;
       flex-flow: row;
       flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      height: 100%;
+      align-items: start;
+      height: 60%;
       width: 100%;
+      @media (max-width: 700px) {
+        flex-flow: column;
+
+        align-items: center;
+      }
 
       button{
         margin: 10px;
@@ -149,7 +101,13 @@ export default {
       flex-flow: column;
       justify-content: space-evenly;
       align-items: center;
-      height: 70%;
+      margin-top: -10%;
+      background-color: $theme-color;
+      @media (max-width: 700px) {
+        margin-top: 30%;
+
+      }
+      height: 50%;
       width: 50%;
       @media (max-width: 750px){
         width: 80%;
@@ -160,7 +118,7 @@ export default {
         font-size: 300%;
         top: 10%;
         left: 10%;
-        color: white;
+        color: $main-color;
         transition: all 0.5s;
         cursor: pointer;
 
@@ -173,10 +131,10 @@ export default {
         background: none;
         outline: none;
         border: none;
-        border-bottom: 2px solid white;
+        border-bottom: 2px solid $main-color;
         font-size: 250%;
         text-align: center;
-        color: white;
+        color: $main-color;
         width: 50%;
         @media (max-width: 750px){
           width: 80%;
@@ -193,7 +151,7 @@ export default {
     div{
       display: flex;
       flex-flow: column;
-      color: white;
+      color: $main-color;
       font-size: 150%;
       width: 100%;
 
